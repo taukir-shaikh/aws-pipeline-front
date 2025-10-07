@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import { useEffect } from "react";
 import {
   Routes,
@@ -13,6 +14,14 @@ import RequireAuth from "./common/RequireAuth";
 import Dashboard from "./pages/Dashboard";
 import Login from "./pages/Auth/login";
 import Signup from "./pages/Auth/SignUp";
+=======
+import React, { useEffect } from 'react';
+import { Routes, Route, Navigate } from 'react-router-dom';
+import Login from './components/login';
+import Dashboard from './Dashboard';
+import { useDispatch, useSelector } from 'react-redux';
+import { setCredentials } from './store/slices/authSlice';
+>>>>>>> 41b0ae3bc73962188bb0c435b96e285b2482e011
 
 const App = () => {
   const dispatch = useDispatch();
@@ -33,6 +42,7 @@ const App = () => {
   }, [dispatch]);
 
   return (
+<<<<<<< HEAD
     <>
       <Routes>
         {/* Public Routes */}
@@ -80,6 +90,14 @@ const App = () => {
       </Routes>
       <ToastContainer />
     </>
+=======
+    <Routes>
+      <Route path="/" element={<Navigate to="/login" replace />} />
+      <Route path="/login" element={<Login />} />
+      <Route path="/dashboard" element={<Dashboard />} />
+      <Route path='/signup' element={<Signup/>} />
+    </Routes>
+>>>>>>> 41b0ae3bc73962188bb0c435b96e285b2482e011
   );
 };
 
