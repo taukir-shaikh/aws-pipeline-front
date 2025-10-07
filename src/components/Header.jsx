@@ -20,6 +20,7 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import PipelineSearch from "./pipelineSearch/PipelineSearch";
+import LoadingOverlay from "./Loader";
 
 const Header = () => {
   const dispatch = useDispatch();
@@ -31,6 +32,7 @@ const Header = () => {
 
   const bg = useColorModeValue("whiteAlpha.900", "gray.900");
   const shadow = useColorModeValue("md", "sm");
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     if (localStorage.getItem("userInfo")) {
@@ -38,8 +40,20 @@ const Header = () => {
     }
   }, []);
 
+ const handleLogout = () => {
+    setLoading(true); // show loader
+    localStorage.removeItem("userInfo"); 
+    if (logout) dispatch(logout());
+    
+    setTimeout(() => {
+      setLoading(false); 
+      navigate("/login");
+    }, 1500); 
+  };
 
   return (
+    <>
+    <LoadingOverlay visible={loading}/>
     <Flex
       as="header"
       px={{ base: 4, md: 8 }}
@@ -110,7 +124,7 @@ const Header = () => {
         {isUserLoggedIn ? (
           <Button
             variant="outline"
-            onClick={() => dispatch(logout())}
+            onClick={handleLogout}
             colorScheme="teal"
             size="sm"
             borderRadius="full"
@@ -130,6 +144,7 @@ const Header = () => {
         )}
       </HStack>
     </Flex>
+    </>
   );
 };
 

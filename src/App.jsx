@@ -46,11 +46,11 @@ const App = () => {
         <Route
           path="/dashboard"
           element={
-            <RequireAuth>
+            // <RequireAuth>
               <MainLayout>
                 <Dashboard />
               </MainLayout>
-            </RequireAuth>
+            // </RequireAuth>
           }
         />
 
