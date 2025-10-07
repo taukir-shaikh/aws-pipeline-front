@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Box,
   Button,
@@ -10,17 +10,45 @@ import {
   Heading,
   Text,
   Link,
-  Spinner,
 } from "@chakra-ui/react";
 import { toast } from "react-toastify";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { clearError, loginUser } from "../../store/slices/authSlice";
 
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [errors, setErrors] = useState({ email: "", password: "" });
-  const [loading, setLoading] = useState(false);
+  
+  const dispatch = useDispatch();
   const navigate = useNavigate();
+  const location = useLocation();
+  const { loading, error, isAuthenticated } = useSelector((state) => state.auth);
+
+  const from = location.state?.from?.pathname || "/dashboard";
+
+  // Redirect if already authenticated
+  useEffect(() => {
+    if (isAuthenticated) {
+      navigate(from, { replace: true });
+    }
+  }, [isAuthenticated, navigate, from]);
+
+  // Clear Redux errors when component unmounts
+  useEffect(() => {
+    return () => {
+      dispatch(clearError());
+    };
+  }, [dispatch]);
+
+  // Show error toast if there's a Redux error
+  useEffect(() => {
+    if (error) {
+      toast.error(error);
+      dispatch(clearError());
+    }
+  }, [error, dispatch]);
 
   const validate = () => {
     let valid = true;
@@ -48,40 +76,21 @@ const Login = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (validate()) {
-      setLoading(true); // show loader while API is processing
-      try {
-        const response = await fetch("http://localhost:8000/api/authenticate", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ email, password }),
-        });
+    if (!validate()) return;
 
-        const data = await response.json();
-        console.log(data);
-
-        if (data.status === true) {
+    dispatch(loginUser({ email, password }))
+      .unwrap()
+      .then((result) => {
+        if (result.status === true) {
           toast.success("Login successful! Redirecting...");
-          // Keep loading true until redirected
-          setTimeout(() => {
-            navigate("/dashboard");
-          }, 1500); // small delay for smooth UX
-
-          const userInfo ={
-            id: data.id,
-            token: data.token,
-          }
-          localStorage.setItem("userInfo", JSON.stringify(userInfo));
-        } else {
-          toast.error(data.message || "Login failed. Please try again.");
-          setLoading(false);
+          // The navigation will be handled by the useEffect above
+          // when isAuthenticated becomes true
         }
-      } catch (error) {
-        toast.error("Something went wrong!");
+      })
+      .catch((error) => {
+        // Error is handled by the useEffect above
         console.error("Login error:", error);
-        setLoading(false);
-      }
-    }
+      });
   };
 
   return (
@@ -122,7 +131,7 @@ const Login = () => {
             w="full"
             size="lg"
             rounded="xl"
-            isLoading={loading} // Chakra built-in loader
+            isLoading={loading}
             loadingText="Signing in..."
           >
             Sign In
@@ -130,8 +139,12 @@ const Login = () => {
         </form>
 
         <Text mt={4} fontSize="sm" textAlign="center">
-          Don’t have an account?{" "}
-          <Link color="teal.500" href="#">
+          Don't have an account?{" "}
+          <Link 
+            color="teal.500" 
+            onClick={() => navigate("/signup")}
+            style={{ cursor: 'pointer' }}
+          >
             Sign up
           </Link>
         </Text>

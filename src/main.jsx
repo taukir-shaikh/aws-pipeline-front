@@ -5,6 +5,7 @@ import overrides from '../src/theme/theme';
 import App from './App'
 import { BrowserRouter } from 'react-router-dom';
 import store from './store';
+import { Provider } from 'react-redux';
 
 let extendedOverrides = { ...overrides };
 
