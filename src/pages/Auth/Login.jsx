@@ -78,7 +78,7 @@ const Login = () => {
     e.preventDefault();
     if (!validate()) return;
 
-    dispatch(loginUser({ email, password }))
+    dispatch(loginUser({ username:email, password }))
       .unwrap()
       .then((result) => {
         if (result.status === true) {

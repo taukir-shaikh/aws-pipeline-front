@@ -26,10 +26,9 @@ ReactDOM.createRoot(rootElement).render(
     <ChakraProvider theme={theme}>
       <Provider store={store}>
         <BrowserRouter>
-          <MainLayout>
-            <Dashboard />
-          </MainLayout>
-          {/* <App /> */}
+          {/* <MainLayout>
+          </MainLayout> */}
+          <App />
         </BrowserRouter>
       </Provider>
     </ChakraProvider>
