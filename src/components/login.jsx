@@ -131,7 +131,7 @@ const Login = () => {
 
         <Text mt={4} fontSize="sm" textAlign="center">
           Don’t have an account?{" "}
-          <Link color="teal.500" href="#">
+          <Link color="teal.500" href="/signup">
             Sign up
           </Link>
         </Text>
