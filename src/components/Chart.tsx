@@ -22,13 +22,13 @@ const Chart = () => {
   };
 
   return (
-    <Box p={6} bg="gray.50" minH="400px">
+    <Box p={6} bg="gray.50" minH="655px">
       <PieComparisonChart
         data={pipelineData}
         colors={colors}
         title="Pipeline Status"
         showInside={true}
-        insideFormatter={insideFormatter}
+        // insideFormatter={insideFormatter}
         outsideFormatter={outsideFormatter}
       />
     </Box>

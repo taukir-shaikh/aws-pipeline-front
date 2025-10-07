@@ -10,6 +10,7 @@ import Dashboard from "./pages/Dashboard";
 import Login from "./pages/Auth/login";
 import Signup from "./pages/Auth/SignUp";
 import MainLayout from "./layouts/MainLayout";
+import "./App.css"
 
 const App = () => {
   const dispatch = useDispatch();
