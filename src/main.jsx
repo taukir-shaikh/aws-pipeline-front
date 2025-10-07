@@ -6,6 +6,7 @@ import App from './App'
 import { BrowserRouter } from 'react-router-dom';
 import store from './store';
 import { Provider } from 'react-redux';
+import Dashboard from './pages/Dashboard';
 
 let extendedOverrides = { ...overrides };
 
@@ -20,7 +21,8 @@ ReactDOM.createRoot(rootElement).render(
     <ChakraProvider theme={theme}>
       <Provider store={store}>
       <BrowserRouter>
-        <App />
+      <Dashboard/>
+        {/* <App /> */}
       </BrowserRouter>
       </Provider>
     </ChakraProvider>
