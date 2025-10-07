@@ -1,11 +1,24 @@
-import React from "react";
+import React, { useState } from "react";
 import { AgGridReact } from "ag-grid-react";
-import { Box, Heading, Text } from "@chakra-ui/react";
+import {
+  Badge,
+  Box,
+  Button,
+  Heading,
+  Text,
+  useDisclosure,
+} from "@chakra-ui/react";
 
 import "ag-grid-community/styles/ag-grid.css";
 import "ag-grid-community/styles/ag-theme-alpine.css";
 
-import { ModuleRegistry, ClientSideRowModelModule, PaginationModule } from "ag-grid-community";
+import {
+  ModuleRegistry,
+  ClientSideRowModelModule,
+  PaginationModule,
+} from "ag-grid-community";
+import { FaArrowAltCircleRight } from "react-icons/fa";
+import PipelineModal from "./pipelineSearch/PipelineModal";
 
 ModuleRegistry.registerModules([ClientSideRowModelModule, PaginationModule]);
 
@@ -40,42 +53,126 @@ const headerStyle = `
   }
 `;
 
-
 const Dashboard = () => {
+  const { onOpen, onClose } = useDisclosure();
+  const [selectedPipeline, setSelectedPipeline] = useState(null);
+
+  const handleModalClose = () => {
+    setSelectedPipeline(null);
+    onClose();
+  };
+  const handleReserveClick = (pipeline) => {
+    setSelectedPipeline(pipeline);
+    onOpen();
+  };
   const columnDefs = [
-    { headerName: "ID", field: "id", filter: "agNumberColumnFilter" },
     { headerName: "Name", field: "name", filter: "agTextColumnFilter" },
-    { headerName: "Age", field: "age", filter: "agNumberColumnFilter" },
-    { headerName: "Email", field: "email", filter: "agTextColumnFilter" },
     {
-      headerName: "Join Date",
-      field: "joinDate",
-      filter: "agDateColumnFilter",
-      filterParams: {
-        comparator: (filterLocalDateAtMidnight, cellValue) => {
-          if (!cellValue) return -1;
-          const cellDate = new Date(cellValue);
-          if (cellDate < filterLocalDateAtMidnight) return -1;
-          if (cellDate > filterLocalDateAtMidnight) return 1;
-          return 0;
-        },
-        browserDatePicker: true,
+      headerName: "Branch",
+      field: "branch",
+    },
+    {
+      headerName: "Status",
+      field: "status",
+      filter: "agTextColumnFilter",
+      cellRenderer: (params) => {
+        if (params.value === "Available") {
+          return (
+            <Badge colorScheme="green" variant="solid">
+              {params.value}
+            </Badge>
+          );
+        } else if (params.value === "Used") {
+          return (
+            <Badge colorScheme="red" variant="solid">
+              {params.value}
+            </Badge>
+          );
+        } else if (params.value === "Pending") {
+          return (
+            <Badge colorScheme="orange" variant="solid">
+              {params.value}
+            </Badge>
+          );
+        }
       },
     },
-    { headerName: "Status", field: "status", filter: "agTextColumnFilter" },
+    {
+      headerName: "Action",
+      field: "action",
+      cellRenderer: (params) => {
+        if (params.data.status === "Available") {
+          return (
+            <Button
+              leftIcon={<FaArrowAltCircleRight />}
+              colorScheme={"teal"}
+              size={"sm"}
+              onClick={() => handleReserveClick(params.data)}
+            >
+              Reserve
+            </Button>
+          );
+        } else {
+          return (
+            <>
+            <Text fontStyle={"italic"} color={"red.500"}>Used by {params.data.usedBy || "Someone"}</Text>
+            </>
+          )
+        }
+      },
+    },
   ];
 
   const rowData = [
-    { id: 1, name: "John Doe", age: 28, email: "john.doe@example.com", joinDate: "2025-01-15", status: "Active" },
-    { id: 2, name: "Jane Smith", age: 34, email: "jane.smith@example.com", joinDate: "2024-11-20", status: "Inactive" },
-    { id: 3, name: "Michael Johnson", age: 41, email: "michael.johnson@example.com", joinDate: "2023-07-10", status: "Active" },
-    { id: 4, name: "Emily Davis", age: 25, email: "emily.davis@example.com", joinDate: "2025-03-05", status: "Pending" },
-    { id: 5, name: "William Brown", age: 30, email: "william.brown@example.com", joinDate: "2022-12-12", status: "Active" },
+    {
+      id: 1,
+      name: "John Doe",
+      age: 28,
+      email: "john.doe@example.com",
+      branch: "2025-01-15",
+      status: "Used",
+    },
+    {
+      id: 2,
+      name: "Jane Smith",
+      age: 34,
+      email: "jane.smith@example.com",
+      branch: "2024-11-20",
+      status: "Available",
+    },
+    {
+      id: 3,
+      name: "Michael Johnson",
+      age: 41,
+      email: "michael.johnson@example.com",
+      branch: "2023-07-10",
+      status: "Used",
+    },
+    {
+      id: 4,
+      name: "Emily Davis",
+      age: 25,
+      email: "emily.davis@example.com",
+      branch: "2025-03-05",
+      status: "Available",
+    },
+    {
+      id: 5,
+      name: "William Brown",
+      age: 30,
+      email: "william.brown@example.com",
+      branch: "2022-12-12",
+      status: "Used",
+    },
   ];
 
   return (
     <Box p={6} bg="gray.50" minH="100vh">
       <style>{headerStyle}</style>
+       <PipelineModal 
+        pipeline={selectedPipeline} 
+        onClose={handleModalClose} 
+      />
       <Box
         className="ag-theme-alpine"
         boxShadow="lg"

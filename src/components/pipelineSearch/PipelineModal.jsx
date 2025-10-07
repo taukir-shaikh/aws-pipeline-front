@@ -13,11 +13,14 @@ import {
   Button,
   ModalFooter,
   useDisclosure,
+  Box,
+  Divider,
 } from "@chakra-ui/react";
 import { useState } from "react";
 import { useDispatch } from "react-redux";
 import { reservePipeline } from "../../store/slices/pipelineSlice";
 import { toast } from "react-toastify";
+import { FaArrowAltCircleRight } from "react-icons/fa";
 
 const PipelineModal = ({ pipeline, onClose }) => {
   const dispatch = useDispatch();
@@ -55,19 +58,38 @@ const PipelineModal = ({ pipeline, onClose }) => {
               Status:{" "}
               <Badge
                 colorScheme={
-                  pipeline.status?.toLowerCase() === "active"
-                    ? "green"
-                    : "red"
+                  pipeline.status?.toLowerCase() === "active" ? "green" : "red"
                 }
                 px={2}
               >
                 {pipeline.status}
               </Badge>
             </Text>
-            <Text mt={4} color="gray.500">
-              Description: This is a demo pipeline for UAT AWS CodePipeline
-              management.
-            </Text>
+            <Box>
+              <Box
+                display={"flex"}
+                justifyContent={"space-between"}
+                alignItems={"center"}
+              >
+                <Text fontWeight={"semibold"} mb={0}>
+                  Waiting Queue
+                </Text>
+                <Button
+                  size={"sm"}
+                  leftIcon={<FaArrowAltCircleRight />}
+                  colorScheme="teal"
+                >
+                  Request Pipeline
+                </Button>
+              </Box>
+              <Divider my={2} />
+              <Box>
+                {/* From api */}
+                {Array.from({ length: 5 }).map((_, index) => (
+                  <Text key={index}>{pipeline.email}</Text>
+                ))}
+              </Box>
+            </Box>
           </ModalBody>
           <ModalFooter>
             {pipeline.status?.toLowerCase() === "available" ? (
@@ -92,7 +114,7 @@ const PipelineModal = ({ pipeline, onClose }) => {
             <FormControl>
               <FormLabel>Duration (minutes)</FormLabel>
               <Input
-                type="number"
+                type="time"
                 value={duration}
                 onChange={(e) => setDuration(e.target.value)}
               />

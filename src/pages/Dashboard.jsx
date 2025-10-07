@@ -21,9 +21,10 @@ const Dashboard = () => {
           </Box>
           <Divider
             orientation="vertical"
-            height="100%"
+            height="400px"
+            m={"auto"}
             color="black"
-            border="1px solid black"
+            border="1px solid gray.300"
           />
           <Box width={"40%"} height="100%">
             <Chart />
