@@ -6,22 +6,31 @@ import {
   Button,
   Link,
   HStack,
-  IconButton,
   useColorMode,
   useColorModeValue,
   Text,
+  InputGroup,
+  InputLeftElement,
+  Input,
+  IconButton,
+  useBreakpointValue,
 } from "@chakra-ui/react";
-import { MoonIcon, SunIcon } from "@chakra-ui/icons";
+import { MoonIcon, SunIcon, SearchIcon } from "@chakra-ui/icons";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
+import PipelineSearch from "./pipelineSearch/PipelineSearch";
 
 const Header = () => {
-  const { logout } = useSelector((state) => state.auth);
-  const { colorMode, toggleColorMode } = useColorMode();
+  const dispatch = useDispatch();
   const navigate = useNavigate();
+  const { logout } = useSelector((state) => state.auth);
 
+  const { colorMode, toggleColorMode } = useColorMode();
   const [isUserLoggedIn, setIsUserLoggedIn] = useState(false);
+
+  const bg = useColorModeValue("whiteAlpha.900", "gray.900");
+  const shadow = useColorModeValue("md", "sm");
 
   useEffect(() => {
     if (localStorage.getItem("userInfo")) {
@@ -29,105 +38,93 @@ const Header = () => {
     }
   }, []);
 
+
   return (
     <Flex
       as="header"
-      px={6}
-      py={4}
+      px={{ base: 4, md: 8 }}
+      py={3}
       align="center"
-      bg={useColorModeValue("white", "gray.800")}
-      boxShadow="sm"
+      bg={bg}
+      boxShadow={shadow}
       position="sticky"
       top="0"
       zIndex="1000"
+      backdropFilter="blur(8px)"
+      borderBottomWidth="1px"
     >
       {/* Logo */}
       <Box>
-        <Link href="/">
+        <Link
+          onClick={() => navigate("/dashboard")}
+          _hover={{ textDecoration: "none" }}
+        >
           <Text
-            fontSize="xl"
+            fontSize={useBreakpointValue({ base: "lg", md: "xl" })}
             fontWeight="bold"
-            textDecor={"none"}
-            _hover={{ color: "teal.500", textDecor: "none" }}
+            color="teal.500"
           >
-            <span style={{ color: "teal" }}>UrbanEdge</span> Constructions
+            AWS <Text as="span" color={useColorModeValue("gray.700", "gray.200")}>
+              CodePipeline
+            </Text>
           </Text>
         </Link>
       </Box>
 
       <Spacer />
 
-      {/* Navigation */}
-      <HStack
-        as="nav"
-        spacing={6}
-        display={{ base: "none", md: "flex" }}
-        fontWeight="medium"
+      {/* Search Bar (like YouTube) */}
+      <Box
+        flex="1"
+        maxW={useBreakpointValue({ base: "60%", md: "40%" })}
+        mx={4}
       >
-        <Link
-          href="/"
-          _hover={{ textDecoration: "underline", color: "teal.500" }}
-        >
-          Home
-        </Link>
-        <Link
-          href="/about"
-          _hover={{ textDecoration: "underline", color: "teal.500" }}
-        >
-          About Us
-        </Link>
-        <Link
-          href="/services"
-          _hover={{ textDecoration: "underline", color: "teal.500" }}
-        >
-          Services
-        </Link>
-        <Link
-          href="/projects"
-          _hover={{ textDecoration: "underline", color: "teal.500" }}
-        >
-          Projects
-        </Link>
-        <Link
-          href="/blogs"
-          _hover={{ textDecoration: "underline", color: "teal.500" }}
-        >
-          Blogs
-        </Link>
-        <Link
-          href="/contact"
-          _hover={{ textDecoration: "underline", color: "teal.500" }}
-        >
-          Contact
-        </Link>
-      </HStack>
+        <PipelineSearch/>
+      </Box>
 
       <Spacer />
 
-      {/* Actions */}
       <HStack spacing={4}>
+        {/* Color Mode Toggle */}
         <IconButton
           aria-label="Toggle color mode"
           icon={colorMode === "light" ? <MoonIcon /> : <SunIcon />}
           onClick={toggleColorMode}
           size="sm"
           variant="ghost"
+          colorScheme="teal"
         />
 
+        {/* Avatar */}
         <Avatar
           size="sm"
-          name="User Name"
-          src="/path/to/avatar.jpg"
+          name="User"
+          src="https://avatars.githubusercontent.com/u/9919?v=4"
           cursor="pointer"
-          _hover={{ boxShadow: "md" }}
+          _hover={{ boxShadow: "lg", transform: "scale(1.05)" }}
+          transition="0.2s"
+          onClick={() => navigate("/profile")}
         />
 
+        {/* Auth Buttons */}
         {isUserLoggedIn ? (
-          <Button variant="outline" onClick={logout} colorScheme="teal" size="sm">
+          <Button
+            variant="outline"
+            onClick={() => dispatch(logout())}
+            colorScheme="teal"
+            size="sm"
+            borderRadius="full"
+          >
             Sign Out
           </Button>
         ) : (
-          <Button variant="solid" onClick={() => navigate("/admin/login")} colorScheme="teal" size="sm">
+          <Button
+            variant="solid"
+            onClick={() => navigate("/login")}
+            colorScheme="teal"
+            size="sm"
+            borderRadius="full"
+          >
             Sign In
           </Button>
         )}

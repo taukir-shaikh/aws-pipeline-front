@@ -1,9 +1,5 @@
 import { useEffect } from "react";
-import {
-  Routes,
-  Route,
-  Navigate,
-} from "react-router-dom";
+import { Routes, Route, Navigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { setCredentials } from "./store/slices/authSlice";
 import { ToastContainer } from "react-toastify";
@@ -13,6 +9,7 @@ import RequireAuth from "./common/RequireAuth";
 import Dashboard from "./pages/Dashboard";
 import Login from "./pages/Auth/login";
 import Signup from "./pages/Auth/SignUp";
+import MainLayout from "./layouts/MainLayout";
 
 const App = () => {
   const dispatch = useDispatch();
@@ -49,7 +46,9 @@ const App = () => {
           path="/dashboard"
           element={
             <RequireAuth>
-              <Dashboard />
+              <MainLayout>
+                <Dashboard />
+              </MainLayout>
             </RequireAuth>
           }
         />
