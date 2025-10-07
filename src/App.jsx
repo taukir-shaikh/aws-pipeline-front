@@ -48,9 +48,9 @@ const App = () => {
         <Route
           path="/dashboard"
           element={
-            <RequireAuth>
               <Dashboard />
-            </RequireAuth>
+            // <RequireAuth>
+            // </RequireAuth>
           }
         />
 

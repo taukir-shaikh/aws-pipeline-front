@@ -1,10 +1,14 @@
 import { Box } from '@chakra-ui/react'
-import Header from '../components/Header'
+import React from 'react'
+import NewDashboard from '../components/Dashboard'
+import Chart from '../components/chart'
 
 const Dashboard = () => {
   return (
+
     <Box>
-      <Header/>
+      <Chart/>
+    <NewDashboard/>
     </Box>
   )
 }
