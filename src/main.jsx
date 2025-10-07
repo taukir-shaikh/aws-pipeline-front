@@ -3,6 +3,7 @@ import React from 'react'
 import * as ReactDOM from 'react-dom/client'
 import overrides from '../src/theme/theme';
 import App from './App'
+import { BrowserRouter } from 'react-router-dom';
 
 let extendedOverrides = { ...overrides };
 
@@ -15,7 +16,9 @@ const rootElement = document.getElementById('root')
 ReactDOM.createRoot(rootElement).render(
   <React.StrictMode>
     <ChakraProvider theme={theme}>
-      <App />
+      <BrowserRouter>
+        <App />
+      </BrowserRouter>
     </ChakraProvider>
   </React.StrictMode>,
 )
