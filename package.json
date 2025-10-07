@@ -14,6 +14,7 @@
     "@emotion/react": "^11.14.0",
     "@emotion/styled": "^11.14.1",
     "@mui/material": "^7.3.4",
+    "@reduxjs/toolkit": "^2.9.0",
     "ag-grid-community": "^34.2.0",
     "ag-grid-enterprise": "^34.2.0",
     "ag-grid-react": "^34.2.0",
@@ -23,8 +24,13 @@
     "react": "^19.1.1",
     "react-dom": "^19.1.1",
     "react-icons": "^5.5.0",
+<<<<<<< Updated upstream
     "react-router-dom": "^7.9.3",
     "react-toastify": "^11.0.5"
+=======
+    "react-redux": "^9.2.0",
+    "react-router-dom": "^7.9.3"
+>>>>>>> Stashed changes
   },
   "devDependencies": {
     "@eslint/js": "^9.36.0",
